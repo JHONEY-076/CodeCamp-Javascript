@@ -1,31 +1,36 @@
+// 문서내에서 지정된  그룹과 일치하는 데이터를 querySelector로 참조해줌
 const messageContainer = document.querySelector("#d-day-message");
 const container = document.querySelector("#d-day-container");
 const savedDate = localStorage.getItem("saved-date");
 const intervalIdArr = [];
 
+//input 박스에 입력된 값을 불러와서 dataFormat 형태로 반환해주는 함수
 const dataFormMaker = function () {
   const inputYear = document.querySelector("#target-year-input").value;
   const inputMonth = document.querySelector("#target-month-input").value;
   const inputDate = document.querySelector("#target-date-input").value;
 
+  //주어진 변수를 바로 문자열 형태(2024-09-07)로 변환해줌(템플릿 리터럴)
   //const dateFormat= inputYear + '-' + inputMonth + '-'+inputDate;
   const dateFormat = `${inputYear}-${inputMonth}-${inputDate}`;
   //템플릿 리터럴
   return dateFormat;
-  //console.log(inputYear, inputMonth, inputDate);
+  // console.log(inputYear, inputMonth, inputDate);
 };
 
+//날짜 데이터를 관리해주는 함수
 const counterMaker = function (data) {
   if (data !== savedDate) {
     localStorage.setItem("saved-date", data);
   }
   const nowDate = new Date();
-  const targetDate = new Date(data).setHours(0, 0, 0, 0);
-  const remaining = (targetDate - nowDate) / 1000;
+  const targetDate = new Date(data).setHours(0, 0, 0, 0); //자정을 기준으로 날짜를 다시 구해옴
+  const remaining = (targetDate - nowDate) / 1000; //지정된 날짜와 현재 날짜를 빼서 초로 나타냄
 
+  //remaining이 0이거나 음수인경우 그리고 잘못된 값이 입력된 값이 있으면 해당 메세지를 출력해줌
   if (remaining <= 0) {
-    container.style.display = "none";
-    messageContainer.innerHTML = "<h3>타이머가 종료되었습니다</h3>";
+    container.style.display = "none"; //3번째 줄에 container에 대한 변수 지역 변수로 참조함
+    messageContainer.innerHTML = "<h3>타이머가 종료되었습니다</h3>"; //2번째 줄에 messageContainer에 대한 지역 변수 지역 변수로 참조함
     messageContainer.style.display = "flex";
     setClearInterval();
     return;
@@ -37,6 +42,7 @@ const counterMaker = function (data) {
     return;
   }
 
+  // 날짜,시간,분,초를 계산한 값을 가지고 있는 객체
   const remainingObj = {
     remainingDate: Math.floor(remaining / 3600 / 24),
     remainingHours: Math.floor(remaining / 3600) % 24,

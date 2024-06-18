@@ -20,6 +20,7 @@ const dataFormMaker = function () {
 
 //날짜 데이터를 관리해주는 함수
 const counterMaker = function (data) {
+  //starter()의 타겟데이트 인풋을 매개변수로 가져옴
   if (data !== savedDate) {
     localStorage.setItem("saved-date", data);
   }
@@ -51,7 +52,7 @@ const counterMaker = function (data) {
   };
 
   const documentArr = ["days", "hours", "min", "sec"];
-  const timeKeys = Object.keys(remainingObj);
+  const timeKeys = Object.keys(remainingObj); //Object.keys(): 객체의 키들만 가지고 배열로 저장하는 매서드
 
   const format = function (time) {
     if (time < 10) {
@@ -67,46 +68,26 @@ const counterMaker = function (data) {
     document.getElementById(tag).textContent = remainingTime;
     i++;
   }
-
-  // for (let i = 0; i < timeKeys.length; i = i + 1) {
-  //   documentObj[docKeys[i]].textContent = remainingObj[timeKeys[i]];
-  // }
-
-  // documentObj["days"].textContent = remainingObj["remainingDate"];
-  // documentObj["hours"].textContent = remainingObj["remainingHours"];
-  // documentObj["min"].textContent = remainingObj["remainingMin"];
-  // documentObj["sec"].textContent = remainingObj["remainingSec"];
-
-  // const documentObj = {
-  //   days: document.getElementById("days"),
-  //   hours: document.getElementById("hours"),
-  //   min: document.getElementById("min"),
-  //   sec: document.getElementById("sec"),
-  // };
-  // let i = 0;
-  // for (let key in documentObj) {
-  //   documentObj[key].textContent = remainingObj[timeKeys[i]];
-  //   // i=i+1;
-  //   i++;
-  // }
 };
 
 const starter = function (targetDateInput) {
-  // 매개변수의 데이터가 들어오는지 유뮤에 따라서
   if (!targetDateInput) {
-    //매개변수가 안들어 올  경우
-    targetDateInput = dataFormMaker(); // 데이터를 할당
+    //타겟데이트인풋이 저장이 안 되었을때
+    targetDateInput = dataFormMaker(); // 템플릿 형태로 타겟데이트 인풋 데이터를 할당
   }
   container.style.display = "flex";
   messageContainer.style.display = "none";
   setClearInterval();
   counterMaker(targetDateInput);
   const intervalId = setInterval(() => {
+    // setInterval() 1초에 한번씩 counterMaker함수를 호출하는 함수
     counterMaker(targetDateInput);
   }, 1000);
-  intervalIdArr.push(intervalId);
+  intervalIdArr.push(intervalId); //저장된 시간값을 intervalIdArr배열에 대입시킨다.
+  // (intervalIdArr의 배열 초기값은 5번째 줄에 존재)
 };
 
+//생성된 인터벌 함수를 다시 초기화 해주는 함수
 const setClearInterval = function () {
   localStorage.removeItem("saved-date");
   for (let i = 0; i < intervalIdArr.length; i++) {
@@ -114,6 +95,7 @@ const setClearInterval = function () {
   }
 };
 
+// 타이머 초기화 함수
 const resetTimer = function () {
   container.style.display = "none";
   messageContainer.innerHTML = "<h3>D-Day를 입력해 주세요.</h3>";
@@ -121,6 +103,7 @@ const resetTimer = function () {
   setClearInterval();
 };
 
+// savedDate가 truthy한 경우 (savedDate가 존재하면) 카운트다운 시작 버튼 작동
 if (savedDate) {
   starter(savedDate);
 } else {
